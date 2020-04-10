@@ -102,6 +102,8 @@ After VM was started, test your installation
     
     - In Virtualization Station check that IP address of VM is visible under 'Network' section when you browse VM 'Information' section
 
+Note about console access:  
+As default you will not be able to login via console into RancherOS vM. If you need console access into a RancherOS node VM, on VM console screen select 'Autologin on tty1 amd ttyS0' bootloader option to enable 'rancher' user autologin.
 
 References:
 ---
@@ -114,4 +116,4 @@ References:
 
 TO-DO:
 ----
-- Fix console login from Virtualization Station
+- Docker Hub login with token does not work, will be fixed later stage. As workaround login manually with 'docker login'
