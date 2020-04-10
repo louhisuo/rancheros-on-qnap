@@ -30,11 +30,7 @@ This is an example 'cloud-config.yaml' (created in my client machine9. You need 
       - <place your id_rsa.pub content here>
     # Optional, in case you need access external filesystems inside of your RancherOS node.
     mounts:
-    #  - ["<nfs-server-ip>:/rancheros", "/storage", "nfs4", ""]
-      - <nfs-server-ip>:/rancheros
-      - /storage
-      - nfs4
-      - ""
+      - ["<nfs-server-ip>:/rancheros", "/storage", "nfs4", ""]
     rancher:
       # enable VM tools and NFS client functionality
       services_include:
