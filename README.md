@@ -118,3 +118,4 @@ TO-DO:
 ----
 - Docker Hub login with token does not work, will be fixed later stage. As workaround login manually with 'docker login'
 - How to deploy 'rancher-compose', equalent to 'docker-compose' on Rancher ecosystem up and running
+- Add instructions how to create multiple network interfaces setup (requires defining another "physical" adapter/interface for VM via Virtualization Station 
