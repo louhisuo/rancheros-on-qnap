@@ -1,7 +1,11 @@
 # RancherOS on QNAP
-Long story short ... in search of docker and kubernetes homelab environments which works on QNAP NAS and requres as minimal maintance as possible allowing me focus working with docker/k8s I have been going through different alternaternatives e.g. Ubuntu, CentOS to name few. Props has been that these are full blown Linux distros with all bells and wishles but cons is that I need to spend quite some time to provision a node (or host or VM whichever you may want to call it) before a node is actually usable. This probably improves in future after I learn how to use cloud-init but this is where I stand at the moment.
+Long story short ...
 
-So I decided to look into Container Operating systems e.g. CoreOS (Red Hat), PhotonOS (VMware), RancherOS (Rancher Labs), to name few, and decided to give RancherOS try as it looked fairy straight forward to setup. So far outcome is so promising that I decided to create a hort guide to document how to spin up quickly docker nodes with RancherOS, without steps of VM cloning etc.
+In search of a Docker homelab environments which works on QNAP NAS, is quick to get up and running and requires minimal maintance during its lifecycle I have been going through different OS alternaternatives, for example Ubuntu, CentOS just to name two the most usual suspects. While using full blown Linux distros with all bells and whistles as a Docker host is a great as you get everything you need out of the box there is also cons side that I need to spend quite some time to provisioning a host (or node or VM whichever you may want to call it) before a it is actually usable. This is likely to change in future after I have done with my experiments using 'cloud-init' to provision new hosts.
+
+So I decided to look alternatives, namely Container Operating systems e.g. CoreOS (Red Hat), Photon OS (VMware), RancherOS (Rancher Labs), to name few, and decided to give RancherOS try as it looked fairy straight forward to setup and as I am planning to deep dive Rancher ecosystem more deeply in future. So far outcome is so promising. I have now few RancherOS based Docker node VMs up and running. With 'cloud-config' set of a new node is breeze with minimal amount of manual work and Docker is up and running out of the box. As cons side RancherOS is really bare minimal so I am lacking many Linux tools and from Docker perspective a biggest gap is lack of 'docker-compose' which Rancher Labs has replaced with their own version, called 'rancher-compose'. I have not yet tried 'rancher-compose' myself as I need to figure out how to get it installed first.
+
+Regarless, I am planning to run with RancherOS for timebeing for my homelabs as pros quickly getting new nodes running and minimal OS maintenance weights more at this stage. Below are instructions how I got RancherOS up and running on my QNAP NAS.
 
 ## Pre-installation steps
 These steps are only needed to be executed once (as longs as you store/document outcome).
@@ -22,7 +26,7 @@ Generate Docker Hub access token to able to push dokcer images to Hub
     - Note a token for later use (you need it for cloud-config.yaml)
 
 ## Create cloud-config.yaml
-This is an example 'cloud-config.yaml' (created in my client machine9. You need to have a unique yaml-file for each node you create. 
+This is an example 'cloud-config.yaml' (created in my client machine). You need to create a unique yaml-file for each node you provision. 
 
     # cloud-config
     hostname: docker-ce
@@ -54,7 +58,7 @@ This is an example 'cloud-config.yaml' (created in my client machine9. You need 
 
 # Create a new persistant RancherOS node VM
 Create VM by using QNAP Virtualization Station. These steps are needed for every node you create with an unique 'cloud-config.yaml' you have created in above step from above example.In 'Create VM' window I use following settings.   
-Note: Boot from ISO image (earlier downloaded rancheros.iso) requires minimal 2048MB to boot up.
+Note: Boot from ISO image (earlier downloaded rancheros.iso) requires minimal 2048MB to boot up. After installation is fully completed you are able to adjust memory, I am running some of nodes with 1024 MB memory.
 
     - OS type: Generic
     - Memory: 2048 MB (note: with 1024 MB) VM will not boot up)
@@ -105,6 +109,17 @@ After VM was started, test your installation
 Note about console access:  
 As default you will not be able to login via console into RancherOS vM. If you need console access into a RancherOS node VM, on VM console screen select 'Autologin on tty1 amd ttyS0' bootloader option to enable 'rancher' user autologin.
 
+Note about multiple network interfaces:  
+If you define multiple network interface in 'cloud-config.yaml' you also need to provision equal amount of interfaces that sits on same network for VM by using Virtualization Station. You may do that in following way
+
+    - Select VM
+    - Goto VM 'Settings'
+    - Clich 'Add device' button on top right corner
+    - Choose 'Network' device type
+    - Select network you want to attach interface from 'Virtual switch' drop down menu
+    - Choose device model (I use 'Intel Gigabit Ethernet' myself)
+    - Click 'Apply' on bottom right corner
+
 References:
 ---
 - https://rancher.com/rancher-os/  
@@ -118,4 +133,4 @@ TO-DO:
 ----
 - Docker Hub login with token does not work, will be fixed later stage. As workaround login manually with 'docker login'
 - How to deploy 'rancher-compose', equalent to 'docker-compose' on Rancher ecosystem up and running
-- Add instructions how to create multiple network interfaces setup (requires defining another "physical" adapter/interface for VM via Virtualization Station 
+
